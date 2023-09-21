@@ -135,6 +135,9 @@ RUN cmake --build build -- -j8
 
 COPY --chown=user . $HOME/app/gaussian-splatting-cuda
 
+# Set the working directory to the user's home directory
+WORKDIR $HOME/app
+
 RUN echo "Build ended at: $(date "+%Y-%m-%d %H:%M")"
 
 EXPOSE 7860

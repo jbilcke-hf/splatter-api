@@ -19,16 +19,7 @@ RUN apt --yes install build-essential wget curl rpl
 RUN echo "Build started at: $(date "+%Y-%m-%d %H:%M")"
 
 # NodeJS - LEGACY/DEPRECATED WAY
-#RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-#RUN apt --yes install nodejs
-
-# NodeJS - NEW, MORE ANNOYING WAY
-RUN apt --yes install -y ca-certificates gnupg
-RUN mkdir -p /etc/apt/keyrings
-RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-ENV NODE_MAJOR=18
-RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
-RUN apt update
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt --yes install nodejs
 
 # git and file management

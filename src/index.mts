@@ -1,5 +1,7 @@
+console.log("splatter-api is booting up")
 
 import express from "express"
+
 import { initFolders } from "./initFolders.mts"
 
 initFolders()

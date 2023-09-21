@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node --loader ts-node/esm src/index.mts",
     "docker": "npm run docker:build && npm run docker:run",
-    "docker:build": "docker build -t community-api .",
-    "docker:run": "docker run -it -p 7860:7860 community-api"
+    "docker:build": "docker build -t splatter-api .",
+    "docker:run": "docker run -it -p 7860:7860 splatter-api"
   },
   "author": "Julian Bilcke <julian.bilcke@huggingface.co>",
   "license": "Apache License",
