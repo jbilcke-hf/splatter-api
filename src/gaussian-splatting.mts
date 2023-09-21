@@ -3,7 +3,7 @@ import { exec } from "child_process"
 /**
  * Interface for the options for the `runGaussianSplattingCUDA` function.
  */
-interface Options {
+export interface Options {
   /**
    * Data path for the training data.
    */
