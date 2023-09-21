@@ -12,9 +12,17 @@ app_port: 7860
 
 ### What is this project?
 
+WARNING - This project is not finished!
+
 Gaussian Splatting API is a REST API to generate 3D Gaussian Splatting scenes from a set of images.
 
 It is a wrapper around [MrNERF/gaussian-splatting-cuda](https://github.com/MrNeRF/gaussian-splatting-cuda).
+
+### TODO
+
+- [x] Compile gaussian-splatting-cuda with Docker
+- [ ] Support upload of assets
+- [ ] Support download of scenes
 
 ### License
 
@@ -26,7 +34,8 @@ This is a [publicly funded project](https://repo-sam.inria.fr/fungraph/3d-gaussi
 
 You will have to talk with the original rightholders at the INRIA and MPII.
 
-Also, please tell if you know about any alternative project with a fully permissive open-source licensing.
+Also, please tell me if you know about any alternative project with a fully permissive open-source licensing.
+
 
 ## Running on your machine
 
