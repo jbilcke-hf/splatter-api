@@ -110,6 +110,8 @@ WORKDIR $HOME/app/gaussian-splatting-cuda
 
 COPY --chown=user . $HOME/app/gaussian-splatting-cuda
 
+WORKDIR $HOME/app
+
 RUN echo "Build ended at: $(date "+%Y-%m-%d %H:%M")"
 
 EXPOSE 7860
