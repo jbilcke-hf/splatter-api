@@ -7,12 +7,15 @@ initFolders()
 const app = express()
 const port = 7860
 
-// fix this error: "PayloadTooLargeError: request entity too large"
-// there are multiple version because.. yeah well, it's Express!
-// app.use(bodyParser.json({limit: '50mb'}));
-//app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb', extended: true}));
+const queue = []
+const queueLimit = 4
+
+app.use(express.json({limit: '50mb'}))
+app.use(express.urlencoded({limit: '50mb', extended: true}))
+
+app.post("/", async (req, res) => {
+  // TODO
+})
 
 app.get("/", async (req, res) => {
   // this is what users will see in the space - but no need to show something scary
