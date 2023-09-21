@@ -19,7 +19,16 @@ RUN apt --yes install build-essential wget curl rpl
 RUN echo "Build started at: $(date "+%Y-%m-%d %H:%M")"
 
 # NodeJS - LEGACY/DEPRECATED WAY
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+#RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+#RUN apt --yes install nodejs
+
+# NodeJS - NEW, MORE ANNOYING WAY
+RUN apt --yes install -y ca-certificates gnupg
+RUN mkdir -p /etc/apt/keyrings
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+ENV NODE_MAJOR=18
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+RUN apt update
 RUN apt --yes install nodejs
 
 # git and file management
@@ -97,10 +106,36 @@ RUN git clone --recursive https://github.com/MrNeRF/gaussian-splatting-cuda
 
 WORKDIR $HOME/app/gaussian-splatting-cuda
 
-# for quick testing we disabled the rest
+RUN wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip  
+RUN unzip libtorch-cxx11-abi-shared-with-deps-2.0.1+cu118.zip -d external/
+RUN rm libtorch-cxx11-abi-shared-with-deps-2.0.1+cu118.zip
+
+# Build (on CPU, this will add compute_35 as build target, which we do not want)
+# There seems to be a work around, see this thread:
+# https://github.com/MrNeRF/gaussian-splatting-cuda/issues/14
+# here is the hack:
+#
+# Replace "native" by "all"
+# inspired by https://github.com/ztxz16/fastllm/pull/309/files
+#
+# CUDA architectures are defined as codes
+# by default CMake detected:
+# 3.5;5.0;8.0;8.6;8.9;9.0
+# To see the mapping: https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
+# A10G and A100 -> Ampere -> sm_80, sm_86, sm_87 -> 8.0;8.6;8.7
+# Nvidia T4 -> Turing -> sm_75 -> 7.5
+# ? -> Lovelace ->  sm_89 -> 8.6
+# ? -> Hopper -> sm_90 -> 9.0
+RUN find . -name CMakeLists.txt -exec sed -i 's/CUDA_ARCHITECTURES native/CUDA_ARCHITECTURES all/' {} +
+
+#RUN cmake -B build -D CMAKE_BUILD_TYPE=Release -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-12.2/ -D CUDA_VERSION=12.2
+# Let's try to downgrade the version
+RUN cmake -B build -D CMAKE_BUILD_TYPE=Release -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-11.8/ -D CUDA_VERSION=11.8
+RUN cmake --build build -- -j8
 
 COPY --chown=user . $HOME/app/gaussian-splatting-cuda
 
+# Set the working directory to the user's home directory
 WORKDIR $HOME/app
 
 RUN echo "Build ended at: $(date "+%Y-%m-%d %H:%M")"
